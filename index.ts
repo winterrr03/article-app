@@ -24,7 +24,7 @@ const startServer = async () => {
   apolloServer.applyMiddleware({
     app: app,
     path: "/graphql"
-  })
+  });
 
   app.listen(port, () => {
     console.log(`App listening on port ${port}`);
