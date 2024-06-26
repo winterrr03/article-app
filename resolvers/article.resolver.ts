@@ -3,10 +3,29 @@ import Category from "../models/category.model";
 
 export const resolversArticle = {
   Query: {
-    getListArticle: async () => {
+    getListArticle: async (_, args) => {
+      const { 
+        sortKey, 
+        sortValue,
+        currentPage,
+        limitItems
+      } = args;
+
+      // Phân trang
+      const skip = (currentPage - 1) * limitItems;
+      // Hết Phân trang
+
+      // Sắp xếp
+      const sort = {};
+
+      if(sortKey && sortValue) {
+        sort[sortKey] = sortValue;
+      }
+      // Hết Sắp xếp
+
       const articles = await Article.find({
         deleted: false
-      });
+      }).limit(limitItems).skip(skip).sort(sort);
       
       return articles;
     },
