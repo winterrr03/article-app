@@ -8,8 +8,28 @@ export const resolversArticle = {
         sortKey, 
         sortValue,
         currentPage,
-        limitItems
+        limitItems,
+        filterKey,
+        filterValue,
+        keyword
       } = args;
+
+      // Bộ lọc
+      const find = {
+        deleted: false
+      };
+
+      if(filterKey && filterValue) {
+        find[filterKey] = filterValue;
+      }
+      // Hết Bộ lọc
+
+      // Tìm kiếm
+      if (keyword) {
+        const keywordRegex = new RegExp(keyword, "i");
+        find["title"] = keywordRegex;
+      }
+      // Hết Tìm kiếm
 
       // Phân trang
       const skip = (currentPage - 1) * limitItems;
@@ -23,9 +43,7 @@ export const resolversArticle = {
       }
       // Hết Sắp xếp
 
-      const articles = await Article.find({
-        deleted: false
-      }).limit(limitItems).skip(skip).sort(sort);
+      const articles = await Article.find(find).limit(limitItems).skip(skip).sort(sort);
       
       return articles;
     },
